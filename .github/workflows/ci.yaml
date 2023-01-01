@@ -871,7 +871,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
         options: --health-cmd="mysqladmin ping -uroot -ppassword" --health-interval=5s --health-timeout=2s --health-retries=3
     if: |
-      (github.event_name != 'push' || github.event.repository.full_name == 'home-assistant/core')
+      (github.event_name != 'push' || github.event.repository.full_name == 'Stonos/core')
       && github.event.inputs.lint-only != 'true'
       && needs.info.outputs.test_full_suite == 'true'
     needs:
