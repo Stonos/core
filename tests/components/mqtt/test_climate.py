@@ -508,7 +508,7 @@ async def test_set_target_humidity(hass, mqtt_mock_entry_with_yaml_config):
     await common.async_set_humidity(hass, humidity=82, entity_id=ENTITY_CLIMATE)
     state = hass.states.get(ENTITY_CLIMATE)
     assert state.attributes.get("humidity") == 82
-    mqtt_mock.async_publish.assert_called_once_with("humidity-topic", "82.0", 0, False)
+    mqtt_mock.async_publish.assert_called_once_with("humidity-topic", "82", 0, False)
     mqtt_mock.async_publish.reset_mock()
 
 
@@ -630,7 +630,7 @@ async def test_set_target_temperature_low_high_optimistic(
     config["climate"]["temperature_low_state_topic"] = "temperature-low-state"
     config["climate"]["temperature_high_state_topic"] = "temperature-high-state"
     assert await async_setup_component(hass, mqtt.DOMAIN, {mqtt.DOMAIN: config})
-    await hass.async_block_till_done()
+    awaithass.async_block_till_done()
     await mqtt_mock_entry_with_yaml_config()
 
     state = hass.states.get(ENTITY_CLIMATE)
@@ -1190,7 +1190,7 @@ async def test_set_and_templates(hass, mqtt_mock_entry_with_yaml_config, caplog)
     # Humidity
     await common.async_set_humidity(hass, humidity=82, entity_id=ENTITY_CLIMATE)
     mqtt_mock.async_publish.assert_called_once_with(
-        "humidity-topic", "humidity: 82.0", 0, False
+        "humidity-topic", "humidity: 82", 0, False
     )
     mqtt_mock.async_publish.reset_mock()
     state = hass.states.get(ENTITY_CLIMATE)
