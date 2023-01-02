@@ -245,9 +245,14 @@ def valid_humidity_range_configuration(config: ConfigType) -> ConfigType:
 
 
 def valid_humidity_state_configuration(config: ConfigType) -> ConfigType:
-    """Validate that if CONF_HUMIDITY_STATE_TOPIC is set then CONF_HUMIDITY_COMMAND_TOPIC is also set"""
-    if config[CONF_HUMIDITY_STATE_TOPIC] is not None and config[CONF_HUMIDITY_COMMAND_TOPIC] is None:
-        raise ValueError("%s cannot be used without %s", CONF_HUMIDITY_STATE_TOPIC, CONF_HUMIDITY_COMMAND_TOPIC)
+    """Validate that if CONF_HUMIDITY_STATE_TOPIC is set then CONF_HUMIDITY_COMMAND_TOPIC is also set."""
+    if (
+        CONF_HUMIDITY_STATE_TOPIC in config
+        and CONF_HUMIDITY_COMMAND_TOPIC not in config
+    ):
+        raise ValueError(
+            f"{CONF_HUMIDITY_STATE_TOPIC} cannot be used without {CONF_HUMIDITY_COMMAND_TOPIC}"
+        )
 
     return config
 
@@ -687,7 +692,10 @@ class MqttClimate(MqttEntity, ClimateEntity):
             """Handle target humidity coming via MQTT."""
 
             if not self.supported_features & ClimateEntityFeature.TARGET_HUMIDITY:
-                _LOGGER.error("Attempted to set target humidity with no %s configured", CONF_HUMIDITY_COMMAND_TOPIC)
+                _LOGGER.error(
+                    "Attempted to set target humidity with no %s configured",
+                    CONF_HUMIDITY_COMMAND_TOPIC,
+                )
                 return
 
             handle_climate_attribute_received(
@@ -886,7 +894,10 @@ class MqttClimate(MqttEntity, ClimateEntity):
         """Set new target humidity."""
 
         if not self.supported_features & ClimateEntityFeature.TARGET_HUMIDITY:
-            _LOGGER.error("Attempted to set target humidity with no %s configured", CONF_HUMIDITY_COMMAND_TOPIC)
+            _LOGGER.error(
+                "Attempted to set target humidity with no %s configured",
+                CONF_HUMIDITY_COMMAND_TOPIC,
+            )
             return
 
         await self._set_climate_attribute(
